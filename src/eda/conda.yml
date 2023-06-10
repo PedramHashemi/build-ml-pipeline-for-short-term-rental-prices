@@ -5,10 +5,11 @@ channels:
 dependencies:
   - python=3.8
   - jupyterlab
+  - jupyter=1.0
   - seaborn
   - pandas
   - pip
-  - pandas-profiling
+  - pandas-profiling=3.1
   - pyarrow
   - wandb
   - pip:
