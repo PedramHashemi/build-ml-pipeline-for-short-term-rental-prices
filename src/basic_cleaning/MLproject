@@ -17,7 +17,7 @@ entry_points:
         description: The type of the object.
         type: string
 
-       output_description:
+      output_description:
         description: A description of the Object to be stored
         type: string
 
@@ -31,4 +31,4 @@ entry_points:
 
 
     command: >-
-        python run.py  --input_artifact {input_artifact}  --output_artifact {output_artifact}  --output_type {output_type}  -- output_description { output_description}  --min_price {min_price}  --max_price {max_price} 
+        python run.py  --input_artifact {input_artifact}  --output_artifact {output_artifact}  --output_type {output_type}  --output_description {output_description}  --min_price {min_price}  --max_price {max_price} 
