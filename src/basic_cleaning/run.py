@@ -14,27 +14,32 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
 
 
-def go(args:Any):
-    """_summary_
+def simple_cleaning(args:Any):
+    """Clean the data.
 
     Args:
-        args (_type_): _description_
+        args (Any): The arguments give to the file.
     """
+    logger.info("Connecting to W&B")
     run = wandb.init(job_type="basic_cleaning")
     run.config.update(args)
 
     # Download input artifact. This will also log that this script is using this
     # particular version of the artifact
+    logger.info("Getting the unclean data from W&B")
     artifact_local_path = run.use_artifact(args.input_artifact).file()
     df = pd.read_csv(artifact_local_path)
 
-    # Performing the cleaning
+    logger.info("Cleaning the prices.")
     idx = df['price'].between(args.min_price, args.max_price)
     df = df[idx].copy()
     df['last_review'] = pd.to_datetime(df['last_review'])
 
     # Storing the Artifact in W&B
+    logger.info("Saving the data locally.")
     df.to_csv(args.output_artifact, index=False)
+
+    logger.info("Saving the artifact into W&B.")
     artifact = wandb.Artifact(
         args.output_artifact,
         type=args.output_type,
@@ -43,6 +48,7 @@ def go(args:Any):
     artifact.add_file(args.output_artifact)
     run.log_artifact(artifact)
 
+    logger.info("Removing the file in the local repository.")
     os.remove(args.output_artifact)
 
 
@@ -95,4 +101,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    go(args)
+    simple_cleaning(args)
