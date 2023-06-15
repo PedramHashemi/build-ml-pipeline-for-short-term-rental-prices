@@ -50,12 +50,7 @@ def go(args):
 
     # Fix the random seed for the Random Forest, so we get reproducible results
     rf_config['random_state'] = args.random_seed
-
-    ######################################
-    # Use run.use_artifact(...).file() to get the train and validation artifact (args.trainval_artifact)
-    # and save the returned path in train_local_pat
-    trainval_local_path = # YOUR CODE HERE
-    ######################################
+    trainval_local_path = run.use_artifact(args.trainval_artifact)
 
     X = pd.read_csv(trainval_local_path)
     y = X.pop("price")  # this removes the column "price" from X and puts it into y
@@ -63,20 +58,24 @@ def go(args):
     logger.info(f"Minimum price: {y.min()}, Maximum price: {y.max()}")
 
     X_train, X_val, y_train, y_val = train_test_split(
-        X, y, test_size=args.val_size, stratify=X[args.stratify_by], random_state=args.random_seed
+        X,
+        y,
+        test_size=args.val_size,
+        stratify=X[args.stratify_by],
+        random_state=args.random_seed
     )
 
     logger.info("Preparing sklearn pipeline")
 
-    sk_pipe, processed_features = get_inference_pipeline(rf_config, args.max_tfidf_features)
+    sk_pipe, processed_features = get_inference_pipeline(
+        rf_config, args.max_tfidf_features
+    )
 
     # Then fit it to the X_train, y_train data
     logger.info("Fitting")
 
-    ######################################
     # Fit the pipeline sk_pipe by calling the .fit method on X_train and y_train
-    # YOUR CODE HERE
-    ######################################
+    sk_pipe.fit(X_train, y_train)
 
     # Compute r2 and MAE
     logger.info("Scoring")
@@ -112,12 +111,10 @@ def go(args):
     # Plot feature importance
     fig_feat_imp = plot_feature_importance(sk_pipe, processed_features)
 
-    ######################################
     # Here we save r_squared under the "r2" key
     run.summary['r2'] = r_squared
     # Now log the variable "mae" under the key "mae".
-    # YOUR CODE HERE
-    ######################################
+    run.summary['mae'] = mae
 
     # Upload to W&B the feture importance visualization
     run.log(
