@@ -4,10 +4,10 @@ channels:
   - defaults
   - conda-forge/label/broke
 dependencies:
-  - pandas=2.1
+  - pandas=2.0
   - pip=23.1
   - mlflow=2.3
-  - scikit-learn=1.2
-  - matplotlib=3.2.2
+  - scikit-learn=0.24.1
+  - matplotlib=3.7
   - pillow=8.1.2
   - wandb==0.15

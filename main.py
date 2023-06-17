@@ -103,7 +103,15 @@ def go(config: DictConfig):
                     "train_random_forest"
                 ),
                 "main",
-                parameters=rf_config
+                parameters={
+                    "trainval_artifact": "trainval_data.csv:latest",
+                    "val_size": config['modeling']['val_size'],
+                    "max_tfidf_features": config['modeling']['max_tfidf_features'],
+                    "output_artifact": "random_forest_export",
+                    "stratify_by": config['modeling']['stratify_by'],
+                    "rf_config": rf_config
+
+                }
             )
 
         if "test_regression_model" in active_steps:
