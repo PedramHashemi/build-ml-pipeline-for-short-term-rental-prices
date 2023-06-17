@@ -9,6 +9,10 @@ In this project you will build such a pipeline.
 The details of all the runs in W&B are in the following link: https://wandb.ai/s-pedram-h/nyc_airbnb?workspace=user-s-pedram-h
 The code in the is in the github repository: https://github.com/PedramHashemi/build-ml-pipeline-for-short-term-rental-prices
 
+![Screenshot 2023-06-17 at 12 23 12](https://github.com/PedramHashemi/build-ml-pipeline-for-short-term-rental-prices/assets/22094743/88031606-3d95-4acf-8abe-6dcb73f57667)
+
+
+
 ## Table of contents
 
 - [Build an ML Pipeline for Short-Term Rental Prices in NYC](#build-an-ml-pipeline-for-short-term-rental-prices-in-nyc)
