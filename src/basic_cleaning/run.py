@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
-Download the data from W&B, do the cleaning task on it and store the cleaned data as an artifact in W&B.
+Download the data from W&B, do the cleaning task on it and store 
+the cleaned data as an artifact in W&B.
 """
 import os
 import argparse
@@ -13,8 +14,7 @@ import pandas as pd
 logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
 
-
-def simple_cleaning(args:Any):
+def simple_cleaning(args: Any):
     """Clean the data.
 
     Args:
