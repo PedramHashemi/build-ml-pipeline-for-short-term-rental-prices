@@ -6,6 +6,7 @@ import argparse
 import logging
 import os
 import shutil
+from typing import List
 import matplotlib.pyplot as plt
 
 import mlflow
@@ -41,7 +42,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)-15s %(message)s")
 logger = logging.getLogger()
 
 
-def go(args):
+def train_model(args):
 
     run = wandb.init(job_type="train_random_forest")
     run.config.update(args)
@@ -128,7 +129,16 @@ def go(args):
     )
 
 
-def plot_feature_importance(pipe, feat_names):
+def plot_feature_importance(pipe: Pipeline, feat_names: List[str]):
+    """Plot the importance.
+
+    Args:
+        pipe (pipeline): _description_
+        feat_names (List[str]): _description_
+
+    Returns:
+        _type_: _description_
+    """
     # We collect the feature importance for all non-nlp features first
     feat_imp = pipe["random_forest"].feature_importances_[: len(feat_names)-1]
     # For the NLP feature we sum across all the TF-IDF dimensions into a global
@@ -146,7 +156,16 @@ def plot_feature_importance(pipe, feat_names):
     return fig_feat_imp
 
 
-def get_inference_pipeline(rf_config, max_tfidf_features):
+def get_inference_pipeline(rf_config: dict, max_tfidf_features: List[str]):
+    """Get the inference pipeline and the features to be saved.
+
+    Args:
+        rf_config (dict): configuration file for the 
+        max_tfidf_features (List[str]): _description_
+
+    Returns:
+        _type_: A pipeline and a list of features to be used.
+    """
     # Let's handle the categorical features first
     # Ordinal categorical are categorical values for 
     # which the order is meaningful, for example
@@ -298,4 +317,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    go(args)
+    train_model(args)
