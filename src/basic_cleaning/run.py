@@ -35,6 +35,9 @@ def simple_cleaning(args:Any):
     df = df[idx].copy()
     df['last_review'] = pd.to_datetime(df['last_review'])
 
+    idx = df['longitude'].between(-74.25, -73.50) & \
+        df['latitude'].between(40.5, 41.2)
+    df = df[idx].copy()
     # Storing the Artifact in W&B
     logger.info("Saving the data locally.")
     df.to_csv(args.output_artifact, index=False)
