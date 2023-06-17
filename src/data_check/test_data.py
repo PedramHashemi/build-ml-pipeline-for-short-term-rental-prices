@@ -1,13 +1,17 @@
+""" Testing the data."""
+
 import pandas as pd
 import numpy as np
 import scipy.stats
 import wandb
 import pytest
-import argparse
 
+def test_column_names(data: pd.DataFrame):
+    """Test Column names.
 
-def test_column_names(data):
-
+    Args:
+        data (pd.DataFrame): Dataframe to be tested
+    """
     expected_colums = [
         "id",
         "name",
@@ -33,8 +37,13 @@ def test_column_names(data):
     assert list(expected_colums) == list(these_columns)
 
 
-def test_neighborhood_names(data):
+def test_neighborhood_names(data: pd.DataFrame):
+    """Check the neighborhoods.
+    Check that the neighborhoods fall into the a list of known names.
 
+    Args:
+        data (pd.DataFrame): _description_
+    """
     known_names = ["Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"]
 
     neigh = set(data['neighbourhood_group'].unique())
@@ -45,7 +54,8 @@ def test_neighborhood_names(data):
 
 def test_proper_boundaries(data: pd.DataFrame):
     """
-    Test proper longitude and latitude boundaries for properties in and around NYC
+    Test proper longitude and latitude boundaries for 
+    properties in and around NYC.
     """
     idx = data['longitude'].between(-74.25, -73.50) & \
         data['latitude'].between(40.5, 41.2)
@@ -57,21 +67,27 @@ def test_similar_neigh_distrib(
         data: pd.DataFrame,
         ref_data: pd.DataFrame,
         kl_threshold: float
-    ):
+    ) -> None:
+    """Apply a threshold on the KL divergence to detect if the
+      distribution of the new data is 
+      significantly different than that of the reference dataset
+
+    Args:
+        data (pd.DataFrame): dataframe to be sorted.
+        ref_data (pd.DataFrame): The reference dataframe.
+        kl_threshold (float): The threshold for the comparison.
     """
-    Apply a threshold on the KL divergence to detect if the distribution of the new data is
-    significantly different than that of the reference dataset
-    """
+
     dist1 = data['neighbourhood_group'].value_counts().sort_index()
     dist2 = ref_data['neighbourhood_group'].value_counts().sort_index()
 
     assert scipy.stats.entropy(dist1, dist2, base=2) < kl_threshold
 
-def test_row_count(data):
+def test_row_count(data: pd.DataFrame):
     """Test the number of rows.
 
     Args:
-        data (_type_): _description_
+        data (pd.DataFrame): The dataframe to be checked.
     """
     assert 15000 < data.shape[0] < 1000000
 
@@ -79,51 +95,9 @@ def test_price_range(data: pd.DataFrame, min_price: float, max_price: float):
     """Check that the price 
 
     Args:
-        data (pd.DataFrame): _description_
-        min_price (float): _description_
-        max_price (float): _description_
+        data (pd.DataFrame): the dataset to be checked.
+        min_price (float): minimum price.
+        max_price (float): maximum price.
     """
     idx = data['price'].between(min_price, max_price)
     assert np.sum(~idx) == 0
-
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser()
-
-#     parser.add_argument(
-#         "--csv",
-#         type="data artifact",
-#         help="This data changes throughout the process and new data can be \
-#         tested",
-#         required=True
-#     )
-
-#     parser.add_argument(
-#         "--ref",
-#         type="reference data artifact",
-#         help="This remains the same throughout the process.",
-#         required=True
-#     )
-
-#     parser.add_argument(
-#         "--kl_threshold",
-#         type=float,
-#         help="threshold for divergance test.",
-#         required=True
-#     )
-
-#     parser.add_argument(
-#         "--min_price",
-#         type=float,
-#         help="Minimum of the price that we want to save.",
-#         required=True
-#     )
-
-#     parser.add_argument(
-#         "--max_price",
-#         type=float,
-#         help="Maximum value of the prices."
-#     )
-
-#     args = parser.parse_args()
-
-    
